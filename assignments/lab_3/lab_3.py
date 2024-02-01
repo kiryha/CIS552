@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+from scipy.io.wavfile import write
+from scipy.fft import fft, fftfreq
 
 
 def task_1():
@@ -146,4 +148,71 @@ def task_8():
     plt.show()
 
 
-task_8()
+def task_9():
+
+    # Constants
+    sample_rate = 44000  # Hertz
+    duration = 5  # Seconds
+
+    # Generating time values
+    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+
+    # Generating sine waves
+    signal1 = np.sin(2 * np.pi * 432 * t)  # Sine wave for 432 Hz
+    signal2 = 0.3 * np.sin(2 * np.pi * 4000 * t)  # Sine wave for 4000 Hz, scaled down
+
+    # Mixing the signals
+    mixed_signal = 400 * (signal1 + signal2)  # Scaling up the mixed signal
+
+    # Plotting the first 1000 data points
+    plt.plot(t[:1000], mixed_signal[:1000])
+    plt.xlabel('Time [s]')
+    plt.ylabel('Amplitude')
+    plt.title('First 1000 Data Points of Mixed Signal')
+    plt.show()
+
+    # Normalizing to 16-bit range
+    mixed_signal_normalized = np.int16(mixed_signal / np.max(np.abs(mixed_signal)) * 32767)
+
+    # Writing to a wave file
+    write('output.wav', sample_rate, mixed_signal_normalized)
+
+
+def task_10():
+
+    # Constants
+    sample_rate = 44000  # Hertz
+    duration = 5  # Seconds
+
+    # Generating time values
+    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+
+    # Generating sine waves
+    signal1 = np.sin(2 * np.pi * 432 * t)  # Sine wave for 432 Hz
+    signal2 = 0.3 * np.sin(2 * np.pi * 4000 * t)  # Sine wave for 4000 Hz, scaled down
+
+    # Mixing the signals
+    mixed_signal = 400 * (signal1 + signal2)  # Scaling up the mixed signal
+
+    # Number of samples in mixed_signal
+    N = sample_rate * duration
+
+    # Compute the FFT
+    fft_values = fft(mixed_signal)
+
+    # Compute the frequency bins
+    frequencies = fftfreq(N, 1 / sample_rate)
+
+    # Compute the power spectrum
+    power_spectrum = np.abs(fft_values)
+
+    # Plotting the power spectrum
+    plt.plot(frequencies, power_spectrum)
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Power')
+    plt.title('Power Spectrum of Mixed Signal')
+    plt.xlim(0, 5000)  # Limiting the x-axis for better visibility
+    plt.show()
+
+
+task_10()
