@@ -2,6 +2,7 @@ import cv2
 import imutils
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image, ImageFilter
 
 
 def task_1():
@@ -109,4 +110,109 @@ def task_5():
     plt.show()
 
 
-task_5()
+def task_6():
+
+    image = cv2.imread('images_src/flower.jpg')
+
+    # Convert to HSV color space
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Define range for red color in HSV
+    lower_red = np.array([110, 120, 70])
+    upper_red = np.array([180, 255, 255])
+
+    # Create a mask for red color
+    mask = cv2.inRange(hsv_image, lower_red, upper_red)
+    # Segmenting the red color
+    segmented_image = cv2.bitwise_and(image, image, mask=mask)
+
+    # Display the original image, the mask, and the result
+    cv2.imshow('Original Image', image)
+    cv2.imshow('Mask', mask)
+    cv2.imshow('Segmented Image', segmented_image)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+def task_7():
+
+    image = cv2.imread('images_src/stopSign.png')
+
+    # Convert to HSV color space
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Define the range for red color in HSV
+    lower_red = np.array([0, 120, 70])
+    upper_red = np.array([10, 255, 255])
+    lower_red2 = np.array([170, 120, 70])
+    upper_red2 = np.array([180, 255, 255])
+
+    # Create a mask for red color
+    mask1 = cv2.inRange(hsv, lower_red, upper_red)
+    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+    red_mask = mask1 + mask2
+
+    # Segmenting the red color
+    result = cv2.bitwise_and(image, image, mask=red_mask)
+
+    # Display the original and segmented images
+    cv2.imshow('Original Image', image)
+    cv2.imshow('Red Segmentation', result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+def task_8():
+
+    image = cv2.imread('images_src/Yellow_traffic_sign.png')
+
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Define range of yellow color in HSV
+    lower_yellow = np.array([20, 100, 100])  # Adjust these values based on your image
+    upper_yellow = np.array([30, 255, 255])  # Adjust these values based on your image
+
+    # Create a mask to only keep yellow parts
+    mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+
+    # Bitwise-AND mask and original image
+    segmented_image = cv2.bitwise_and(image, image, mask=mask)
+
+    # Display the original and segmented image
+    cv2.imshow('Original Image', image)
+    cv2.imshow('Segmented Image', segmented_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+def task_9():
+
+    image = Image.open('images_src/Island.png')
+    rotated_image = image.rotate(30)
+    rotated_image.show()
+
+
+def task_10():
+
+    image = Image.open('images_src/Island.png')
+    flipped_image = image.transpose(Image.FLIP_LEFT_RIGHT)
+    flipped_image.show()
+
+
+def task_11():
+
+    image = Image.open('images_src/Island.png')
+    blurred_image = image.filter(ImageFilter.GaussianBlur(5))
+    blurred_image.show()
+
+
+def task_12():
+
+    image = Image.open('images_src/Lenna.png')
+    contour_image = image.filter(ImageFilter.CONTOUR)
+    contour_image.show()
+
+
+task_8()
